@@ -330,3 +330,68 @@ Future<bool> confirmDeleteDialog(
   );
   return confirmed ?? false;
 }
+
+/// Renders a wallet's vector mark, using a crisp custom DANA wavy-ribbon emblem
+/// for DANA instead of a generic QR icon.
+class WalletIcon extends StatelessWidget {
+  const WalletIcon({
+    super.key,
+    required this.wallet,
+    required this.size,
+    required this.color,
+  });
+
+  final Wallet wallet;
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    if (wallet.iconKey == 'dana') {
+      return Center(
+        child: CustomPaint(
+          size: Size.square(size),
+          painter: _DanaMarkPainter(color: color),
+        ),
+      );
+    }
+    return Icon(wallet.icon, size: size, color: color);
+  }
+}
+
+class _DanaMarkPainter extends CustomPainter {
+  const _DanaMarkPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Signature DANA wavy banknote/ribbon emblem in a normalized 24x24 box.
+    final path = Path()
+      ..moveTo(w * 0.12, h * 0.36)
+      ..cubicTo(w * 0.34, h * 0.18, w * 0.62, h * 0.44, w * 0.88, h * 0.27)
+      ..quadraticBezierTo(w * 0.94, h * 0.24, w * 0.94, h * 0.33)
+      ..lineTo(w * 0.94, h * 0.62)
+      ..quadraticBezierTo(w * 0.94, h * 0.69, w * 0.88, h * 0.72)
+      ..cubicTo(w * 0.62, h * 0.88, w * 0.34, h * 0.62, w * 0.12, h * 0.78)
+      ..quadraticBezierTo(w * 0.06, h * 0.81, w * 0.06, h * 0.72)
+      ..lineTo(w * 0.06, h * 0.44)
+      ..quadraticBezierTo(w * 0.06, h * 0.39, w * 0.12, h * 0.36)
+      ..close();
+
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _DanaMarkPainter oldDelegate) =>
+      oldDelegate.color != color;
+}

@@ -5,6 +5,7 @@ import '../data/finance_store.dart';
 import '../models/finance_models.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
+import 'stationery_widgets.dart';
 import 'transaction_editor_sheet.dart';
 
 /// Manage wallet balances (initial balance sync), add new custom wallets, or
@@ -340,7 +341,7 @@ class _WalletBalanceRow extends StatelessWidget {
                 color: wallet.color.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(wallet.icon, color: wallet.color, size: 20),
+              child: WalletIcon(wallet: wallet, color: wallet.color, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(

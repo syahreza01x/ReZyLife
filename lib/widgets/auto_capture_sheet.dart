@@ -228,7 +228,7 @@ class _AppSourceToggleRow extends StatelessWidget {
           color: wallet.color.withOpacity(0.14),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(wallet.icon, color: wallet.color, size: 19),
+        child: WalletIcon(wallet: wallet, color: wallet.color, size: 19),
       ),
       title: Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Text(

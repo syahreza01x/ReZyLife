@@ -723,7 +723,11 @@ class _WalletRailCard extends StatelessWidget {
                               .withOpacity(tokens.isDark ? 0.24 : 0.14),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(wallet.icon, size: 16, color: iconColor),
+                        child: WalletIcon(
+                          wallet: wallet,
+                          size: 16,
+                          color: iconColor,
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -835,9 +839,10 @@ class _TransactionRow extends StatelessWidget {
 
     final isAuto = tx.source != 'manual';
     final title = tx.description.isNotEmpty ? tx.description : category.label;
-    final meta = tx.type == TransactionType.transfer
-        ? '$fromName → ${toName ?? '?'} · ${formatTimeHm(tx.createdAt)}'
-        : '${category.label} · $fromName${isAuto ? ' · Auto' : ''} · ${formatTimeHm(tx.createdAt)}';
+    final walletLabel = tx.type == TransactionType.transfer
+        ? '$fromName → ${toName ?? '?'}'
+        : fromName;
+    final timeLabel = formatTimeHm(tx.createdAt);
 
     final (String amountText, Color amountColor) = switch (tx.type) {
       TransactionType.income => (
@@ -892,12 +897,49 @@ class _TransactionRow extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleMedium?.copyWith(color: tokens.ink),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    meta,
+                  const SizedBox(height: 3),
+                  Text.rich(
+                    TextSpan(
+                      style: textTheme.bodySmall?.copyWith(
+                        fontFeatures: kTabularFigures,
+                      ),
+                      children: [
+                        TextSpan(text: '$walletLabel · $timeLabel'),
+                        if (isAuto)
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5.5,
+                                  vertical: 1,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: tokens.accentSoft,
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                    color: tokens.accent.withOpacity(0.35),
+                                    width: 0.8,
+                                  ),
+                                ),
+                                child: Text(
+                                  'Auto',
+                                  style: textTheme.labelSmall?.copyWith(
+                                    fontSize: 9.5,
+                                    height: 1.2,
+                                    color: tokens.accent,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: textTheme.bodySmall,
                   ),
                 ],
               ),

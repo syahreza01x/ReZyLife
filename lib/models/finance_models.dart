@@ -302,6 +302,14 @@ const List<AppCategory> kExpenseCategories = [
     tint: Color(0xFFFAEAF0),
   ),
   AppCategory(
+    id: 'hobby',
+    label: 'Hobi',
+    type: TransactionType.expense,
+    icon: Icons.sports_esports_rounded,
+    color: Color(0xFF0284C7),
+    tint: Color(0xFFE0F2FE),
+  ),
+  AppCategory(
     id: 'health',
     label: 'Kesehatan',
     type: TransactionType.expense,
@@ -418,7 +426,7 @@ IconData walletIconFromKey(String key) {
     case 'gopay':
       return Icons.account_balance_wallet_rounded;
     case 'dana':
-      return Icons.qr_code_2_rounded;
+      return Icons.account_balance_wallet_outlined;
     case 'shopeepay':
       return Icons.shopping_basket_rounded;
     default:
