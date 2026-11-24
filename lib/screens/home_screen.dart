@@ -420,10 +420,11 @@ class _TotalBalanceCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (!isP5) ...[
+                        if (isP5)
+                          const PhantomMaskBadge()
+                        else
                           const SeesArmbandBadge(),
-                          const SizedBox(width: 5),
-                        ],
+                        const SizedBox(width: 5),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,

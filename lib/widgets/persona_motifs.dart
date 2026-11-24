@@ -560,6 +560,147 @@ class SeesArmbandBadge extends StatelessWidget {
   }
 }
 
+/// Iconic Persona 5 Joker domino mask vector icon (sharp upswept white wing
+/// silhouette, pointed nose bridge, and fierce slanted eye cutouts).
+class PhantomMaskIcon extends StatelessWidget {
+  const PhantomMaskIcon({
+    super.key,
+    this.width = 18,
+    this.height = 10,
+    this.maskColor = Colors.white,
+    this.cutoutColor = const Color(0xFF0E0E13),
+  });
+
+  final double width;
+  final double height;
+  final Color maskColor;
+  final Color cutoutColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(width, height),
+      painter: _PhantomMaskPainter(
+        maskColor: maskColor,
+        cutoutColor: cutoutColor,
+      ),
+    );
+  }
+}
+
+class _PhantomMaskPainter extends CustomPainter {
+  const _PhantomMaskPainter({
+    required this.maskColor,
+    required this.cutoutColor,
+  });
+
+  final Color maskColor;
+  final Color cutoutColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Sharp upswept Joker domino mask silhouette.
+    final mask = Path()
+      ..moveTo(w * 0.50, h * 0.24) // forehead center dip
+      ..quadraticBezierTo(w * 0.34, h * 0.04, w * 0.14, h * 0.14)
+      ..lineTo(0, h * 0.04) // sharp left wing tip
+      ..quadraticBezierTo(w * 0.07, h * 0.48, w * 0.18, h * 0.78)
+      ..quadraticBezierTo(w * 0.34, h * 0.90, w * 0.43, h * 0.72)
+      ..lineTo(w * 0.50, h * 0.96) // pointed nose bridge
+      ..lineTo(w * 0.57, h * 0.72)
+      ..quadraticBezierTo(w * 0.66, h * 0.90, w * 0.82, h * 0.78)
+      ..quadraticBezierTo(w * 0.93, h * 0.48, w, h * 0.04) // sharp right wing tip
+      ..lineTo(w * 0.86, h * 0.14)
+      ..quadraticBezierTo(w * 0.66, h * 0.04, w * 0.50, h * 0.24)
+      ..close();
+
+    canvas.drawPath(
+      mask,
+      Paint()
+        ..color = maskColor
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true,
+    );
+
+    // Fierce slanted almond eye cutouts.
+    final leftEye = Path()
+      ..moveTo(w * 0.17, h * 0.34)
+      ..quadraticBezierTo(w * 0.31, h * 0.32, w * 0.41, h * 0.52)
+      ..quadraticBezierTo(w * 0.29, h * 0.64, w * 0.17, h * 0.34)
+      ..close();
+
+    final rightEye = Path()
+      ..moveTo(w * 0.83, h * 0.34)
+      ..quadraticBezierTo(w * 0.69, h * 0.32, w * 0.59, h * 0.52)
+      ..quadraticBezierTo(w * 0.71, h * 0.64, w * 0.83, h * 0.34)
+      ..close();
+
+    final eyePaint = Paint()
+      ..color = cutoutColor
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
+    canvas.drawPath(leftEye, eyePaint);
+    canvas.drawPath(rightEye, eyePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _PhantomMaskPainter oldDelegate) =>
+      oldDelegate.maskColor != maskColor ||
+      oldDelegate.cutoutColor != cutoutColor;
+}
+
+/// P5R Phantom Thieves micro badge (obsidian black + iconic Joker domino mask
+/// + crisp white calling-card border), mirroring [SeesArmbandBadge] in P3R.
+class PhantomMaskBadge extends StatelessWidget {
+  const PhantomMaskBadge({super.key, this.label = 'PHANTOM'});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: -0.035,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6.5, vertical: 2.5),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D0D12),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.85),
+            width: 0.9,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const ExcludeSemantics(
+              child: PhantomMaskIcon(
+                width: 17,
+                height: 10,
+                maskColor: Colors.white,
+                cutoutColor: Color(0xFFE61B2E),
+              ),
+            ),
+            const SizedBox(width: 4.5),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 9.5,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.7,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Section header styled with a subtle Persona signature mark:
 /// - P3R: crisp diagonal cerulean slash ticks.
 /// - P5R: mini crimson 5-point star + subtle slanted ink underline accent.
