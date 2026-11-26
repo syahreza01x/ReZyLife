@@ -10,8 +10,7 @@ Aplikasi pencatat keuangan pribadi berbasis Flutter (offline-first, SQLite lokal
 ## Fitur Utama
 
 - **Multi-Dompet & Total Uang** — Mendukung `Cash`, `BRImo`, `GoPay`, `DANA`, `ShopeePay`, tambah dompet custom, serta sinkronisasi saldo awal.
-- **Catat Transaksi Cepat** — Pengeluaran, pemasukan, dan pindah saldo (transfer antar dompet) dengan numpad Rupiah (`000`) dan pilihan kategori.
-- **Auto-Catat dari Notifikasi (Android)** — Membaca notifikasi masuk/keluar secara lokal (tanpa internet/server) untuk `BRImo`, `GoPay`, `DANA`, dan `ShopeePay`, lengkap dengan filter anti-promo/OTP dan deduplikasi otomatis.
+- **Catat Transaksi Cepat (Full Manual)** — Pengeluaran (termasuk kategori `Hobi`), pemasukan, dan pindah saldo (transfer antar dompet) dengan numpad Rupiah (`000`) agar saldo selalu sinkron & terkontrol penuh.
 - **Quick Settings Tile (`Catat Cepat`)** — Shortcut langsung di Pusat Kontrol Android untuk membuka aplikasi dan menaikkan form catat transaksi secara instan.
 - **Ringkasan & Analisis** — Grafik donut animasi, perbandingan pemasukan vs pengeluaran, dan rincian pengeluaran per kategori per bulan.
 - **Patungan & Hutang** — Catat hutang/piutang teman, opsi potong/tambah saldo dompet otomatis, dan tombol tandai lunas yang tersinkronisasi dengan dompet.
