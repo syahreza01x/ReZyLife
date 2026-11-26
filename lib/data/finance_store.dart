@@ -36,7 +36,7 @@ class FinanceStore extends ChangeNotifier {
   List<DebtItem> _debts = const [];
   PersonaThemePreset _themePreset = PersonaThemePreset.tatsumi;
   bool _hideBalance = false;
-  bool _autoCaptureEnabled = true;
+  bool _autoCaptureEnabled = false;
   bool _notificationAccessGranted = false;
   Set<String> _enabledAutoWallets = Set<String>.from(kAutoCaptureWalletIds);
   bool _isLoading = true;
@@ -92,7 +92,8 @@ class FinanceStore extends ChangeNotifier {
         _themePreset = PersonaThemePreset.tatsumi;
       }
       _hideBalance = _prefs?.getBool(_prefHideBalanceKey) ?? false;
-      _autoCaptureEnabled = _prefs?.getBool(_prefAutoCaptureKey) ?? true;
+      // Full-manual mode: ignore any legacy auto-capture preference.
+      _autoCaptureEnabled = false;
       final savedWallets = _prefs?.getStringList(_prefAutoWalletsKey);
       if (savedWallets != null) {
         _enabledAutoWallets = savedWallets.toSet();
@@ -101,9 +102,7 @@ class FinanceStore extends ChangeNotifier {
       // Keep default preferences if platform storage is unavailable in tests.
     }
 
-    _notificationAccessGranted = await _notifBridge.isAccessEnabled();
     await reload();
-    await syncPendingNotifications();
     _isLoading = false;
     notifyListeners();
   }

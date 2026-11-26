@@ -5,7 +5,6 @@ import '../data/finance_store.dart';
 import '../models/finance_models.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
-import '../widgets/auto_capture_sheet.dart';
 import '../widgets/persona_date_header.dart';
 import '../widgets/persona_motifs.dart';
 import '../widgets/stationery_widgets.dart';
@@ -132,8 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
           now: now,
           preset: store.themePreset,
           onTogglePreset: widget.onToggleTheme ?? store.toggleThemePreset,
-          autoCaptureActive: store.isAutoCaptureActive,
-          onOpenAutoCapture: () => AutoCaptureSheet.show(context, store),
         ),
         const SizedBox(height: 18),
         _TotalBalanceCard(

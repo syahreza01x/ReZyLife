@@ -1,12 +1,10 @@
 package com.example.keuangan_reza
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -62,35 +60,6 @@ class MainActivity : FlutterActivity() {
 
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
-                "isNotificationAccessEnabled" -> {
-                    result.success(ReZyNotificationListener.isAccessEnabled(this))
-                }
-                "openNotificationAccessSettings" -> {
-                    try {
-                        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-                        startActivity(intent)
-                        result.success(true)
-                    } catch (_: Exception) {
-                        result.success(false)
-                    }
-                }
-                "openAppDetailsSettings" -> {
-                    try {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.fromParts("package", packageName, null)
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-                        startActivity(intent)
-                        result.success(true)
-                    } catch (_: Exception) {
-                        result.success(false)
-                    }
-                }
-                "drainPendingNotifications" -> {
-                    result.success(ReZyNotificationListener.drainPending(this))
-                }
                 "consumePendingQuickAdd" -> {
                     val value = pendingQuickAdd
                     pendingQuickAdd = false
@@ -99,16 +68,9 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
-
-        ReZyNotificationListener.liveCallback = { payload ->
-            mainHandler.post {
-                notifChannel?.invokeMethod("onNotification", payload)
-            }
-        }
     }
 
     override fun onDestroy() {
-        ReZyNotificationListener.liveCallback = null
         notifChannel?.setMethodCallHandler(null)
         notifChannel = null
         super.onDestroy()

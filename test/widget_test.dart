@@ -180,13 +180,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Total Uang'), findsOneWidget);
 
-    // 1i. Auto-Capture notification sheet & atomic auto-record + deduplication.
-    await tester.tap(find.byTooltip('Auto-Catat Notifikasi'));
-    await tester.pumpAndSettle();
-    expect(find.text('Auto-Catat Notifikasi'), findsOneWidget);
-    expect(find.text('Catat Otomatis'), findsOneWidget);
-    Navigator.of(tester.element(find.text('Auto-Catat Notifikasi'))).pop();
-    await tester.pumpAndSettle();
+    // 1i. Full-manual mode: Auto-Catat header action removed & auto-ingest stays off.
+    expect(find.byTooltip('Auto-Catat Notifikasi'), findsNothing);
+    expect(store.isAutoCaptureActive, isFalse);
 
     final sampleNotif = RawFinanceNotification(
       packageName: 'com.gojek.app',
@@ -195,13 +191,10 @@ void main() {
       postedAt: DateTime.now(),
     );
     final firstIngest = await store.ingestRawNotifications([sampleNotif]);
-    final dupIngest = await store.ingestRawNotifications([sampleNotif]);
     await tester.pumpAndSettle();
 
-    expect(firstIngest.length, 1);
-    expect(dupIngest, isEmpty); // Duplicate blocked cleanly!
-    expect(store.walletById('gopay')!.balance, -15000);
-    expect(store.totalBalance, 260000);
+    expect(firstIngest, isEmpty);
+    expect(store.totalBalance, 275000);
   });
 
   testWidgets('2. Analytics donut, mode switching, and Debts settle/unsettle QA',

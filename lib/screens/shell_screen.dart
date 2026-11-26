@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../data/finance_store.dart';
-import '../data/notification_parser.dart';
 import '../models/finance_models.dart';
 import '../theme/app_theme.dart';
-import '../utils/formatters.dart';
 import '../widgets/persona_motifs.dart';
 import '../widgets/transaction_editor_sheet.dart';
 import 'analytics_screen.dart';
@@ -22,7 +20,7 @@ class ShellScreen extends StatefulWidget {
 }
 
 class _ShellScreenState extends State<ShellScreen>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+    with TickerProviderStateMixin {
   int _tabIndex = 0;
   late final PageController _pageController;
   late PersonaThemePreset _targetPreset;
@@ -36,7 +34,6 @@ class _ShellScreenState extends State<ShellScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _pageController = PageController(initialPage: _tabIndex);
     _targetPreset = widget.store.themePreset;
     _enterController = AnimationController(
@@ -49,7 +46,7 @@ class _ShellScreenState extends State<ShellScreen>
     );
 
     widget.store.notificationBridge.setLiveListener(
-      _handleLiveNotification,
+      (_) {},
       onQuickAdd: _handleQuickAddRequest,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -89,41 +86,7 @@ class _ShellScreenState extends State<ShellScreen>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _syncFromBackground();
-    }
-  }
-
-  Future<void> _syncFromBackground() async {
-    await widget.store.refreshNotificationAccess();
-    final added = await widget.store.syncPendingNotifications();
-    if (added.isNotEmpty && mounted) {
-      _announceAutoCaptured(added);
-    }
-  }
-
-  Future<void> _handleLiveNotification(RawFinanceNotification raw) async {
-    final added = await widget.store.ingestRawNotifications([raw]);
-    if (added.isNotEmpty && mounted) {
-      _announceAutoCaptured(added);
-    }
-  }
-
-  void _announceAutoCaptured(List<TransactionItem> added) {
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    if (messenger == null) return;
-    final message = added.length == 1
-        ? 'Auto-catat: ${added.first.type == TransactionType.income ? '+' : '-'}${formatRupiah(added.first.amount)} via ${widget.store.walletById(added.first.walletId)?.name ?? added.first.walletId}'
-        : 'Auto-catat ${added.length} transaksi baru dari notifikasi.';
-    messenger
-      ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     widget.store.notificationBridge.clearLiveListener();
     _pageController.dispose();
     _enterController.dispose();
